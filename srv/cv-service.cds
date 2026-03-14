@@ -23,7 +23,7 @@ service PublicService {
 
 // ─── Servicio privado (Editor - requiere autenticación) ──────────
 @path: '/api/admin'
-@requires: 'any' //Provisorio para desarrollo, luego 'authenticated-user'
+@requires: 'any' // Provisorio para desarrollo, luego 'authenticated-user'
 service AdminService {
 
     entity Profile          as projection on db.Profile;
