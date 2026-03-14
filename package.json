@@ -1,0 +1,39 @@
+{
+  "name": "cv-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "@cap-js/hana": "^2.6.0",
+    "@sap/cds": "^9",
+    "@sap/xssec": "^4"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^2",
+    "@sap/cds-dk": "^9"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  },
+  "private": true,
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "hana-cloud",
+        "[development]": {
+          "kind": "sqlite",
+          "credentials": {
+            "database": ":memory:"
+          }
+        }
+      },
+      "auth": {
+        "kind": "dummy",
+        "[production]": {
+          "kind": "xsuaa"
+        }
+      }
+    },
+    "hana": {
+      "deploy-format": "hdbtable"
+    }
+  }
+}

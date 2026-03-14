@@ -1,0 +1,19 @@
+{
+  "xsappname": "cv-app",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.admin",
+      "description": "Admin scope for CV editor"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "CVAdmin",
+      "description": "CV Editor role",
+      "scope-references": [
+        "$XSAPPNAME.admin"
+      ]
+    }
+  ]
+}

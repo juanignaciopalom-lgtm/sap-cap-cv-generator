@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CV - Juan Ignacio Palomeque</title>
+    <script id="sap-ui-bootstrap"
+        src="https://ui5.sap.com/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-libs="sap.m,sap.ui.layout,sap.ui.core"
+        data-sap-ui-compatVersion="edge"
+        data-sap-ui-preload="off"
+        data-sap-ui-async="true"
+        data-sap-ui-resourceroots='{"cv.viewer": "./"}'>
+    </script>
+    <script>
+        sap.ui.require([
+            "sap/ui/core/Core",
+            "sap/ui/core/mvc/XMLView",
+            "sap/ui/model/json/JSONModel",
+            "sap/ui/model/odata/v4/ODataModel"
+        ], function(Core, XMLView, JSONModel, ODataModel) {
+            Core.ready(function() {
+
+                var oODataModel = new ODataModel({
+                    serviceUrl: "/api/public/",
+                    synchronizationMode: "None",
+                    operationMode: "Server",
+                    autoExpandSelect: true
+                });
+
+                var oLocalModel = new JSONModel({
+                    profile: {},
+                    skills: [],
+                    experiences: [],
+                    projects: [],
+                    education: [],
+                    certifications: [],
+                    languages: []
+                });
+
+                Promise.all([
+                    oODataModel.bindList("/Profile").requestContexts(0, 1),
+                    oODataModel.bindList("/Skills").requestContexts(0, 100),
+                    oODataModel.bindList("/Experiences").requestContexts(0, 100),
+                    oODataModel.bindList("/Projects").requestContexts(0, 100),
+                    oODataModel.bindList("/Education").requestContexts(0, 100),
+                    oODataModel.bindList("/Certifications").requestContexts(0, 100),
+                    oODataModel.bindList("/Languages").requestContexts(0, 100)
+                ]).then(function(aResults) {
+                    oLocalModel.setProperty("/profile", aResults[0].length > 0 ? aResults[0][0].getObject() : {});
+                    oLocalModel.setProperty("/skills", aResults[1].map(function(c) { return c.getObject(); }));
+                    oLocalModel.setProperty("/experiences", aResults[2].map(function(c) { return c.getObject(); }));
+                    oLocalModel.setProperty("/projects", aResults[3].map(function(c) { return c.getObject(); }));
+                    oLocalModel.setProperty("/education", aResults[4].map(function(c) { return c.getObject(); }));
+                    oLocalModel.setProperty("/certifications", aResults[5].map(function(c) { return c.getObject(); }));
+                    oLocalModel.setProperty("/languages", aResults[6].map(function(c) { return c.getObject(); }));
+
+                    return XMLView.create({
+                        viewName: "cv.viewer.view.Main",
+                        models: { "cv": oLocalModel }
+                    });
+                }).then(function(oView) {
+                    oView.placeAt("content");
+                }).catch(function(oError) {
+                    console.error("Error:", oError);
+                });
+            });
+        });
+    </script>
+</head>
+<body class="sapUiBody">
+    <div id="content" style="height:100%"></div>
+</body>
+</html>

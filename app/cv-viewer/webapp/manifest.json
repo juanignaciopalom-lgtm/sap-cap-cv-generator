@@ -1,0 +1,55 @@
+{
+    "_version": "1.58.0",
+    "sap.app": {
+        "id": "cv.viewer",
+        "type": "application",
+        "title": "CV Viewer",
+        "description": "SAP ABAP Developer CV",
+        "applicationVersion": { "version": "1.0.0" },
+        "dataSources": {
+            "publicService": {
+                "uri": "/api/public/",
+                "type": "OData",
+                "settings": { "odataVersion": "4.0" }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "fullWidth": true
+    },
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "cv.viewer.view.Main",
+            "type": "XML",
+            "async": true,
+            "id": "app"
+        },
+        "dependencies": {
+            "minUI5Version": "1.120.0",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.layout": {},
+                "sap.ui.core": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "": {
+                "dataSource": "publicService",
+                "preload": true,
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": true
+                }
+            }
+        },
+        "resources": {
+            "css": [{ "uri": "css/style.css" }]
+        }
+    }
+}

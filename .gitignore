@@ -1,0 +1,25 @@
+node_modules/
+dist/
+gen/
+.env
+.env.*
+default-env.json
+*.log
+
+# CAP
+.sqlite
+*.db
+
+# UI5
+webapp/test-resources/
+
+# MTA
+mta_archives/
+build/
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

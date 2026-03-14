@@ -1,0 +1,18 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    controllerName="cv.viewer.controller.Main"
+    displayBlock="true">
+
+    <Page showHeader="false">
+        <content>
+            <VBox>
+                <Title text="{cv>/profile/firstName} {cv>/profile/lastName}" titleStyle="H1"/>
+                <Label text="{cv>/profile/title}"/>
+                <Label text="{cv>/profile/email}"/>
+                <Label text="{cv>/profile/location}"/>
+            </VBox>
+        </content>
+    </Page>
+
+</mvc:View>

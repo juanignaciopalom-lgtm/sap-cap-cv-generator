@@ -1,0 +1,8 @@
+{
+  "data": {
+    "edition": "cloud",
+    "memory": 32,
+    "storage": 120,
+    "systempassword": "Init1234!"
+  }
+}
