@@ -1,22 +1,40 @@
-# Getting Started
+# SAP CAP CV Generator
 
-Welcome to your new CAP project.
+Aplicación portfolio/CV construida con tecnologías SAP.
 
-It contains these folders and files, following our recommended project layout:
+## Stack
 
-File or Folder | Purpose
----------|----------
-`app/` | content for UI frontends goes here
-`db/` | your domain models and data go here
-`srv/` | your service models and code go here
-`readme.md` | this getting started guide
+- SAP CAP
+- CDS
+- OData V4
+- SAPUI5
+- SAP BTP
+- SAP HANA Cloud (actual)
+- Próxima migración: PostgreSQL
 
-## Next Steps
+## Qué hace
 
-- Open a new terminal and run `cds watch`
-- (in VS Code simply choose _**Terminal** > Run Task > cds watch_)
-- Start with your domain model, in a CDS file in `db/`
+Permite mostrar un CV/portfolio dinámico con:
 
-## Learn More
+- perfil
+- skills
+- experiencia
+- proyectos
+- educación
+- certificaciones
+- idiomas
 
-Learn more at <https://cap.cloud.sap>.
+## Arquitectura
+
+- **Frontend:** SAPUI5
+- **Backend:** SAP CAP Node.js
+- **Modelo:** CDS
+- **Persistencia:** base de datos desacoplada del servicio
+- **Exposición:** OData V4
+
+## Estructura del proyecto
+
+```text
+app/        frontend UI5
+db/         modelo CDS y persistencia
+srv/        servicios CAP

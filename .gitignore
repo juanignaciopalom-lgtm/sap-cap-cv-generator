@@ -1,25 +1,25 @@
+
+## `.gitignore`
+
+Usá este:
+
+```gitignore
 node_modules/
 dist/
+build/
 gen/
+mta_archives/
+resources/
+
 .env
 .env.*
 default-env.json
+
 *.log
-
-# CAP
-.sqlite
 *.db
+*.sqlite
 
-# UI5
-webapp/test-resources/
-
-# MTA
-mta_archives/
-build/
-
-# IDE
 .vscode/
-
-# OS
+.idea/
 .DS_Store
 Thumbs.db
