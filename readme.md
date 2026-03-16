@@ -10,7 +10,8 @@ Aplicación portfolio/CV construida con tecnologías SAP.
 - SAPUI5
 - SAP BTP
 - SAPSAP HANA Cloud (Migrado) X
-- SAPPostgreSQL
+- PostgreSQL
+- XSUAA (Security)
 
 ## Qué hace
 
