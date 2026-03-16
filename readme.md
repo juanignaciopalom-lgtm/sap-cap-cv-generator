@@ -9,8 +9,8 @@ Aplicación portfolio/CV construida con tecnologías SAP.
 - OData V4
 - SAPUI5
 - SAP BTP
-- SAP HANA Cloud (actual)
-- Próxima migración: PostgreSQL
+- SAPSAP HANA Cloud (Migrado) X
+- SAPPostgreSQL
 
 ## Qué hace
 

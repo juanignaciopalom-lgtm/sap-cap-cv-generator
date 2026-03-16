@@ -1,8 +1,6 @@
 const cds = require('@sap/cds');
 
 module.exports = cds.service.impl(async function () {
-  const db = await cds.connect.to('db');
-
   const normalizeText = (s) =>
     (s || "").trim().replace(/\s+/g, " ");
 
@@ -46,6 +44,13 @@ module.exports = cds.service.impl(async function () {
 
   // ───────────────── ADMIN SERVICE ─────────────────
   if (this.name.endsWith('AdminService')) {
+
+    // Defensa extra en runtime, además de @requires:'CVAdmin'
+    this.before('*', (req) => {
+      if (!req.user || !req.user.is('CVAdmin')) {
+        req.reject(403, 'No autorizado para acceder al panel de administración.');
+      }
+    });
 
     this.before(['CREATE', 'UPDATE'], 'Skills', async (req) => {
       const tx = cds.tx(req);
