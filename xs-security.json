@@ -3,7 +3,7 @@
   "tenant-mode": "dedicated",
   "scopes": [
     {
-      "name": "$XSAPPNAME.admin",
+      "name": "$XSAPPNAME.CVAdmin",
       "description": "Admin scope for CV editor"
     }
   ],
@@ -12,7 +12,7 @@
       "name": "CVAdmin",
       "description": "CV Editor role",
       "scope-references": [
-        "$XSAPPNAME.admin"
+        "$XSAPPNAME.CVAdmin"
       ]
     }
   ],
