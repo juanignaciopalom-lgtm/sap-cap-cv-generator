@@ -45,9 +45,9 @@ module.exports = cds.service.impl(async function () {
   // ───────────────── ADMIN SERVICE ─────────────────
   if (this.name.endsWith('AdminService')) {
 
-    // Defensa extra en runtime, además de @requires:'CVAdmin'
+    // Defensa extra en runtime, además de @requires:'admin'
     this.before('*', (req) => {
-      if (!req.user || !req.user.is('CVAdmin')) {
+      if (!req.user || !req.user.is('admin')) {
         req.reject(403, 'No autorizado para acceder al panel de administración.');
       }
     });

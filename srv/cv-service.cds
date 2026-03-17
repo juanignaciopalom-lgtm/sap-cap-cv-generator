@@ -29,7 +29,7 @@ service PublicService {
 
 // ─── Servicio privado (Editor) ───────────────────────────────
 @path: '/api/admin'
-@requires: 'CVAdmin'
+@requires: 'admin'
 service AdminService {
 
     entity Profile        as projection on db.Profile;
