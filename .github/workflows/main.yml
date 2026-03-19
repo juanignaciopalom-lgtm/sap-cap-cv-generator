@@ -10,10 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install Cloud Foundry CLI
+      - name: Download Cloud Foundry CLI
         run: |
           wget -q -O cf8.deb "https://packages.cloudfoundry.org/stable?release=debian64&version=8"
-          sudo dpkg -i cf8.deb
+          ls -lh cf8.deb
+
+      - name: Install Cloud Foundry CLI
+        run: |
+          sudo apt-get update
+          sudo dpkg -i cf8.deb || true
+          sudo apt-get install -f -y
           cf --version
 
       - name: Login to Cloud Foundry
