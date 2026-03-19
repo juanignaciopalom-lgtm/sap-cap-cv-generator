@@ -1,0 +1,13 @@
+name: Wake BTP App
+
+on:
+  schedule:
+    # TODOS LOS DÍAS A LAS 12:00 UTC
+    - cron: "0 12 * * *"
+
+jobs:
+  wake:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping app
+        run: curl -L https://78c1ffa9trial-78c1ffa9trial-dev-cv-app-srv.cfapps.us10-001.hana.ondemand.com/
