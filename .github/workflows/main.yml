@@ -2,12 +2,24 @@ name: Wake BTP App
 
 on:
   schedule:
-    # TODOS LOS DÍAS A LAS 12:00 UTC
+    # TODOS LOS DÍAS A LAS 12:00 UTC (9 AM Argentina aprox)
     - cron: "0 12 * * *"
-    workflow_dispatch:
+  workflow_dispatch:
+
 jobs:
   wake:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Ping app
-        run: curl -L https://78c1ffa9trial-78c1ffa9trial-dev-cv-app-srv.cfapps.us10-001.hana.ondemand.com/
+      - name: Ping app (wake up)
+        run: |
+          echo "Haciendo ping a la app..."
+          curl -L -o /dev/null -s -w "%{http_code}\n" https://78c1ffa9trial-78c1ffa9trial-dev-cv-app-srv.cfapps.us10-001.hana.ondemand.com/
+
+      - name: Esperar unos segundos
+        run: sleep 10
+
+      - name: Verificar que está levantada
+        run: |
+          echo "Verificando estado..."
+          curl -I https://78c1ffa9trial-78c1ffa9trial-dev-cv-app-srv.cfapps.us10-001.hana.ondemand.com/
