@@ -1,25 +1,32 @@
-name: Wake BTP App
+name: Start BTP Apps
 
 on:
   schedule:
-    # TODOS LOS DÍAS A LAS 12:00 UTC (9 AM Argentina aprox)
     - cron: "0 12 * * *"
   workflow_dispatch:
 
 jobs:
-  wake:
+  start-apps:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Ping app (wake up)
+      - name: Install Cloud Foundry CLI
         run: |
-          echo "Haciendo ping a la app..."
-          curl -L -o /dev/null -s -w "%{http_code}\n" https://78c1ffa9trial-78c1ffa9trial-dev-cv-app-srv.cfapps.us10-001.hana.ondemand.com/
+          wget -q -O cf8.deb "https://packages.cloudfoundry.org/stable?release=debian64&version=8"
+          sudo dpkg -i cf8.deb
+          cf --version
 
-      - name: Esperar unos segundos
-        run: sleep 10
-
-      - name: Verificar que está levantada
+      - name: Login to Cloud Foundry
         run: |
-          echo "Verificando estado..."
-          curl -I https://78c1ffa9trial-78c1ffa9trial-dev-cv-app-srv.cfapps.us10-001.hana.ondemand.com/
+          cf api "${{ secrets.CF_API }}"
+          cf auth "${{ secrets.CF_USERNAME }}" "${{ secrets.CF_PASSWORD }}"
+          cf target -o "${{ secrets.CF_ORG }}" -s "${{ secrets.CF_SPACE }}"
+
+      - name: Start backend app
+        run: cf start cv-app-srv
+
+      - name: Start approuter app
+        run: cf start cv-viewer-approuter
+
+      - name: Check apps
+        run: cf apps
