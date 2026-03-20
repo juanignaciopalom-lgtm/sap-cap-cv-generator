@@ -78,3 +78,18 @@ entity Languages : cuid {
     language        : String(100);  // Ej: "Español"
     proficiency     : String(50);   // Ej: "Nativo", "Avanzado", "Intermedio"
 }
+
+// ─── Leads de recruiters / empresas ─────────────────────────────
+entity RecruiterLeads : cuid, managed {
+    fullName         : String(150);
+    email            : String(150);
+    company          : String(150);
+    phone            : String(50);
+    role             : String(100);
+    message          : LargeString;
+    consentAccepted  : Boolean default false;
+    source           : String(100);
+    status           : String(40);      // NEW, BPA_TRIGGERED, BPA_FAILED
+    bpaInstanceId    : String(100);
+    bpaErrorMessage  : LargeString;
+}

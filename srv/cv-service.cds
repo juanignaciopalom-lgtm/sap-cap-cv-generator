@@ -1,6 +1,6 @@
 using cv.app as db from '../db/schema';
 
-// ─── Servicio público (Viewer) ───────────────────────────────
+// ─── Servicio público (Viewer) ──────────────────────────────────
 @path: '/api/public'
 @requires: 'any'
 service PublicService {
@@ -25,9 +25,23 @@ service PublicService {
 
     @readonly
     entity Languages      as projection on db.Languages;
+
+    action submitRecruiterLead(
+        fullName        : String(150),
+        email           : String(150),
+        company         : String(150),
+        phone           : String(50),
+        role            : String(100),
+        message         : String,
+        consentAccepted : Boolean,
+        source          : String(100)
+    ) returns {
+        success : Boolean;
+        message : String;
+    };
 }
 
-// ─── Servicio privado (Editor) ───────────────────────────────
+// ─── Servicio privado (Editor) ──────────────────────────────────
 @path: '/api/admin'
 @requires: 'admin'
 service AdminService {

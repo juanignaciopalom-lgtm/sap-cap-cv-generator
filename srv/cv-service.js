@@ -7,6 +7,11 @@ module.exports = cds.service.impl(async function () {
   const normalizeSkillName = (s) =>
     normalizeText(s).toLowerCase();
 
+  const isValidEmail = (sEmail) => {
+    const sValue = normalizeText(sEmail);
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sValue);
+  };
+
   async function getCurrentProfileID(tx) {
     const oProfile = await tx.run(
       SELECT.one.from('cv.app.Profile').columns('ID')
@@ -39,6 +44,61 @@ module.exports = cds.service.impl(async function () {
           SELECT.from(sSource).where({ profile_ID: sProfileID })
         );
       });
+    });
+
+    this.on('submitRecruiterLead', async (req) => {
+      const tx = cds.tx(req);
+      const oData = req.data || {};
+
+      const fullName = normalizeText(oData.fullName);
+      const email = normalizeText(oData.email).toLowerCase();
+      const company = normalizeText(oData.company);
+      const phone = normalizeText(oData.phone);
+      const role = normalizeText(oData.role);
+      const message = normalizeText(oData.message);
+      const source = normalizeText(oData.source) || 'CV_APP';
+      const consentAccepted = Boolean(oData.consentAccepted);
+
+      if (!fullName) {
+        req.reject(400, 'El nombre y apellido es obligatorio.');
+      }
+
+      if (!email) {
+        req.reject(400, 'El email es obligatorio.');
+      }
+
+      if (!isValidEmail(email)) {
+        req.reject(400, 'El email informado no es válido.');
+      }
+
+      if (!company) {
+        req.reject(400, 'La empresa es obligatoria.');
+      }
+
+      if (!consentAccepted) {
+        req.reject(400, 'Debés aceptar el consentimiento para ser contactado.');
+      }
+
+      await tx.run(
+        INSERT.into('cv.app.RecruiterLeads').entries({
+          fullName,
+          email,
+          company,
+          phone: phone || null,
+          role: role || null,
+          message: message || null,
+          consentAccepted: true,
+          source,
+          status: 'NEW',
+          bpaInstanceId: null,
+          bpaErrorMessage: null
+        })
+      );
+
+      return {
+        success: true,
+        message: 'Tus datos fueron registrados correctamente.'
+      };
     });
   }
 
