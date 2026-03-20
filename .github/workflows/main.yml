@@ -2,9 +2,10 @@ name: Start BTP Apps
 
 on:
   schedule:
-    - cron: "0 12 * * *"
-    - cron: "0 18 * * *"
-    - cron: "0 00 * * *"
+    - cron: "0 3 * * *"    # 00:00 ARG
+    - cron: "0 9 * * *"    # 06:00 ARG
+    - cron: "0 15 * * *"   # 12:00 ARG
+    - cron: "0 21 * * *"   # 18:00 ARG
   workflow_dispatch:
 
 jobs:
@@ -31,10 +32,13 @@ jobs:
           cf target -o "${{ secrets.CF_ORG }}" -s "${{ secrets.CF_SPACE }}"
 
       - name: Start backend app
-        run: cf start cv-app-srv
+        run: cf start cv-app-srv || true
 
       - name: Start approuter app
-        run: cf start cv-viewer-approuter
+        run: cf start cv-viewer-approuter || true
+
+      - name: Wait for startup
+        run: sleep 30
 
       - name: Check apps
         run: cf apps
