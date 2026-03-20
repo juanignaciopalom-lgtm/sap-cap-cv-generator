@@ -79,6 +79,20 @@ module.exports = cds.service.impl(async function () {
         req.reject(400, 'Debés aceptar el consentimiento para ser contactado.');
       }
 
+      const oExistingLead = await tx.run(
+        SELECT.one.from('cv.app.RecruiterLeads').where({
+          email,
+          company
+        })
+      );
+
+      if (oExistingLead) {
+        return {
+          success: true,
+          message: 'Ya tenía registrados tus datos para esta empresa.'
+        };
+      }
+
       await tx.run(
         INSERT.into('cv.app.RecruiterLeads').entries({
           fullName,
@@ -105,7 +119,6 @@ module.exports = cds.service.impl(async function () {
   // ───────────────── ADMIN SERVICE ─────────────────
   if (this.name.endsWith('AdminService')) {
 
-    // Defensa extra en runtime, además de @requires:'admin'
     this.before('*', (req) => {
       if (!req.user || !req.user.is('admin')) {
         req.reject(403, 'No autorizado para acceder al panel de administración.');
@@ -144,6 +157,62 @@ module.exports = cds.service.impl(async function () {
       if (oDuplicate) {
         req.reject(400, `La skill "${oData.name}" ya existe para este perfil.`);
       }
+    });
+
+    this.on('markLeadAsContacted', async (req) => {
+      const tx = cds.tx(req);
+      const { ID } = req.data || {};
+
+      if (!ID) {
+        req.reject(400, 'El ID del lead es obligatorio.');
+      }
+
+      const oExistingLead = await tx.run(
+        SELECT.one.from('cv.app.RecruiterLeads').where({ ID })
+      );
+
+      if (!oExistingLead) {
+        req.reject(404, 'Lead no encontrado.');
+      }
+
+      await tx.run(
+        UPDATE('cv.app.RecruiterLeads')
+          .set({ status: 'CONTACTED' })
+          .where({ ID })
+      );
+
+      return {
+        success: true,
+        message: 'Lead marcado como contactado.'
+      };
+    });
+
+    this.on('discardLead', async (req) => {
+      const tx = cds.tx(req);
+      const { ID } = req.data || {};
+
+      if (!ID) {
+        req.reject(400, 'El ID del lead es obligatorio.');
+      }
+
+      const oExistingLead = await tx.run(
+        SELECT.one.from('cv.app.RecruiterLeads').where({ ID })
+      );
+
+      if (!oExistingLead) {
+        req.reject(404, 'Lead no encontrado.');
+      }
+
+      await tx.run(
+        UPDATE('cv.app.RecruiterLeads')
+          .set({ status: 'DISCARDED' })
+          .where({ ID })
+      );
+
+      return {
+        success: true,
+        message: 'Lead descartado.'
+      };
     });
   }
 });

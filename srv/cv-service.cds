@@ -1,5 +1,15 @@
 using cv.app as db from '../db/schema';
 
+type LeadSubmissionResult {
+    success : Boolean;
+    message : String;
+}
+
+type AdminLeadActionResult {
+    success : Boolean;
+    message : String;
+}
+
 // ─── Servicio público (Viewer) ──────────────────────────────────
 @path: '/api/public'
 @requires: 'any'
@@ -35,13 +45,10 @@ service PublicService {
         message         : String,
         consentAccepted : Boolean,
         source          : String(100)
-    ) returns {
-        success : Boolean;
-        message : String;
-    };
+    ) returns LeadSubmissionResult;
 }
 
-// ─── Servicio privado (Editor) ──────────────────────────────────
+// ─── Servicio privado (Admin / Editor) ──────────────────────────
 @path: '/api/admin'
 @requires: 'admin'
 service AdminService {
@@ -53,4 +60,8 @@ service AdminService {
     entity Education      as projection on db.Education;
     entity Certifications as projection on db.Certifications;
     entity Languages      as projection on db.Languages;
+    entity RecruiterLeads as projection on db.RecruiterLeads;
+
+    action markLeadAsContacted(ID : UUID) returns AdminLeadActionResult;
+    action discardLead(ID : UUID) returns AdminLeadActionResult;
 }
