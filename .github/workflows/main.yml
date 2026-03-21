@@ -2,10 +2,11 @@ name: Start BTP Apps
 
 on:
   schedule:
-    - cron: "0 3 * * *"    # 00:00 ARG
-    - cron: "0 9 * * *"    # 06:00 ARG
-    - cron: "0 15 * * *"   # 12:00 ARG
-    - cron: "0 21 * * *"   # 18:00 ARG
+    - cron: "50 10 * * *"  # 07:50 ARG
+    - cron: "30 13 * * *"  # 10:30 ARG
+    - cron: "30 16 * * *"  # 13:30 ARG
+    - cron: "30 19 * * *"  # 16:30 ARG
+    - cron: "30 21 * * *"  # 18:30 ARG
   workflow_dispatch:
 
 jobs:
@@ -15,11 +16,12 @@ jobs:
     steps:
       - name: Install Cloud Foundry CLI
         run: |
+          set -e
           sudo apt-get update
           sudo apt-get install -y curl gnupg
           curl -fsSL https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key \
-            | sudo gpg --dearmor -o /usr/share/keyrings/cloudfoundry-keyring.gpg
-          echo "deb [signed-by=/usr/share/keyrings/cloudfoundry-keyring.gpg] https://packages.cloudfoundry.org/debian stable main" \
+            | sudo gpg --dearmor -o /usr/share/keyrings/cf-cli.gpg
+          echo "deb [signed-by=/usr/share/keyrings/cf-cli.gpg] https://packages.cloudfoundry.org/debian stable main" \
             | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
           sudo apt-get update
           sudo apt-get install -y cf8-cli
@@ -27,18 +29,61 @@ jobs:
 
       - name: Login to Cloud Foundry
         run: |
+          set -e
           cf api "${{ secrets.CF_API }}"
           cf auth "${{ secrets.CF_USERNAME }}" "${{ secrets.CF_PASSWORD }}"
           cf target -o "${{ secrets.CF_ORG }}" -s "${{ secrets.CF_SPACE }}"
 
-      - name: Start backend app
-        run: cf start cv-app-srv || true
+      - name: Show apps before start
+        run: |
+          cf apps
 
-      - name: Start approuter app
-        run: cf start cv-viewer-approuter || true
+      - name: Start apps with retry
+        run: |
+          set -e
 
-      - name: Wait for startup
-        run: sleep 30
+          start_and_verify() {
+            APP_NAME="$1"
 
-      - name: Check apps
-        run: cf apps
+            echo "======================================"
+            echo "Starting app: $APP_NAME"
+            echo "======================================"
+
+            cf start "$APP_NAME" || true
+
+            echo "Waiting 20 seconds after first start..."
+            sleep 20
+
+            APP_STATE=$(cf app "$APP_NAME" | grep -i "requested state" || true)
+            echo "State after first attempt: $APP_STATE"
+
+            echo "$APP_STATE" | grep -qi "started" && {
+              echo "App $APP_NAME started successfully on first attempt."
+              return 0
+            }
+
+            echo "First attempt did not leave app as started. Retrying..."
+            cf start "$APP_NAME" || true
+
+            echo "Waiting 20 seconds after retry..."
+            sleep 20
+
+            APP_STATE=$(cf app "$APP_NAME" | grep -i "requested state" || true)
+            echo "State after retry: $APP_STATE"
+
+            echo "$APP_STATE" | grep -qi "started" && {
+              echo "App $APP_NAME started successfully on retry."
+              return 0
+            }
+
+            echo "ERROR: App $APP_NAME did not reach STARTED state."
+            cf app "$APP_NAME" || true
+            exit 1
+          }
+
+          start_and_verify "cv-app-srv"
+          start_and_verify "cv-viewer-approuter"
+
+      - name: Show apps after start
+        run: |
+          cf apps
