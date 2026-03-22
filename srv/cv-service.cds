@@ -62,6 +62,8 @@ service AdminService {
     entity Languages      as projection on db.Languages;
     entity RecruiterLeads as projection on db.RecruiterLeads;
 
+    action triggerLeadBpa(ID : UUID) returns AdminLeadActionResult;
     action markLeadAsContacted(ID : UUID) returns AdminLeadActionResult;
     action discardLead(ID : UUID) returns AdminLeadActionResult;
+    action retryLeadBpa(ID : UUID) returns AdminLeadActionResult;
 }
