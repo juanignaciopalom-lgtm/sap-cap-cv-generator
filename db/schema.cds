@@ -6,11 +6,11 @@ using { cuid, managed } from '@sap/cds/common';
 entity Profile : cuid {
     firstName       : String(100);
     lastName        : String(100);
-    title           : String(150);  // Ej: "SAP ABAP Developer"
-    summary         : LargeString;  // Párrafo de presentación
+    title           : String(150);
+    summary         : LargeString;
     email           : String(150);
     phone           : String(50);
-    location        : String(150);  // Ej: "Buenos Aires, Argentina"
+    location        : String(150);
     linkedinUrl     : String(300);
     githubUrl       : String(300);
     photoUrl        : String(500);
@@ -25,25 +25,25 @@ entity Profile : cuid {
 // ─── Skills ─────────────────────────────────────────────────────
 entity Skills : cuid {
     profile     : Association to Profile;
-    name        : String(100);  // Ej: "ABAP", "CAP", "Fiori"
-    category    : String(100);  // Ej: "Backend", "Frontend", "SAP"
-    level       : Integer;      // 1 a 5
+    name        : String(100);
+    category    : String(100);
+    level       : Integer;
 }
 
-// ─── Experiencia laboral ─────────────────────────────────────────
+// ─── Experiencia laboral ────────────────────────────────────────
 entity Experiences : cuid {
     profile         : Association to Profile;
     company         : String(150);
     role            : String(150);
     location        : String(150);
     startDate       : Date;
-    endDate         : Date;        // null = trabajo actual
+    endDate         : Date;
     current         : Boolean default false;
     description     : LargeString;
-    technologies    : String(500); // Ej: "ABAP, BTP, CAP, Fiori"
+    technologies    : String(500);
 }
 
-// ─── Proyectos ───────────────────────────────────────────────────
+// ─── Proyectos ──────────────────────────────────────────────────
 entity Projects : cuid {
     profile         : Association to Profile;
     name            : String(150);
@@ -53,7 +53,7 @@ entity Projects : cuid {
     imageUrl        : String(500);
 }
 
-// ─── Educación ───────────────────────────────────────────────────
+// ─── Educación ──────────────────────────────────────────────────
 entity Education : cuid {
     profile         : Association to Profile;
     institution     : String(150);
@@ -63,7 +63,7 @@ entity Education : cuid {
     endYear         : Integer;
 }
 
-// ─── Certificaciones ─────────────────────────────────────────────
+// ─── Certificaciones ────────────────────────────────────────────
 entity Certifications : cuid {
     profile         : Association to Profile;
     name            : String(200);
@@ -72,11 +72,11 @@ entity Certifications : cuid {
     credentialUrl   : String(300);
 }
 
-// ─── Idiomas ─────────────────────────────────────────────────────
+// ─── Idiomas ────────────────────────────────────────────────────
 entity Languages : cuid {
     profile         : Association to Profile;
-    language        : String(100);  // Ej: "Español"
-    proficiency     : String(50);   // Ej: "Nativo", "Avanzado", "Intermedio"
+    language        : String(100);
+    proficiency     : String(50);
 }
 
 // ─── Leads de recruiters / empresas ─────────────────────────────
@@ -89,7 +89,8 @@ entity RecruiterLeads : cuid, managed {
     message          : LargeString;
     consentAccepted  : Boolean default false;
     source           : String(100);
-    status           : String(40);      // NEW, BPA_TRIGGERED, BPA_FAILED
+    status           : String(40);      // NEW, BPA_TRIGGERED, BPA_FAILED, CONTACTED, DISCARDED
     bpaInstanceId    : String(100);
     bpaErrorMessage  : LargeString;
+    lastTriggeredAt  : Timestamp;
 }
