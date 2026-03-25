@@ -22,6 +22,9 @@ module.exports = cds.service.impl(async function () {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sValue);
   };
 
+  const safeString = (vValue) =>
+    vValue == null ? '' : String(vValue);
+
   async function getCurrentProfileID(tx) {
     const oProfile = await tx.run(
       SELECT.one.from('cv.app.Profile').columns('ID')
@@ -138,15 +141,15 @@ module.exports = cds.service.impl(async function () {
     const oRequestBody = {
       definitionId: BPA_DEFINITION_ID,
       context: {
-        leadid: oPayload.leadid || null,
-        fullname: oPayload.fullname || null,
-        email: oPayload.email || null,
-        company: oPayload.company || null,
-        phone: oPayload.phone || null,
-        role: oPayload.role || null,
-        message: oPayload.message || null,
-        source: oPayload.source || null,
-        createdat: oPayload.createdat || null
+        leadid: safeString(oPayload.leadid),
+        fullname: safeString(oPayload.fullname),
+        email: safeString(oPayload.email),
+        company: safeString(oPayload.company),
+        phone: safeString(oPayload.phone),
+        role: safeString(oPayload.role),
+        message: safeString(oPayload.message),
+        source: safeString(oPayload.source),
+        createdat: safeString(oPayload.createdat)
       }
     };
 
