@@ -1,12 +1,15 @@
 name: Start BTP Apps
 
-on:
+on: 
   schedule:
-    - cron: "50 10 * * *"  # 07:50 ARG
-    - cron: "30 13 * * *"  # 10:30 ARG
-    - cron: "30 19 * * *"  # 16:30 ARG
-    - cron: "30 21 * * *"  # 18:30 ARG
-    - cron: "50 23 * * *"  # 20:30 ARG
+    - cron: "13 11 * * *"  # 08:13 ARG
+    - cron: "11 15 * * *"  # 12:11 ARG
+    - cron: "17 19 * * *"  # 16:17 ARG
+    - cron: "23 23 * * *"  # 20:23 ARG
+    - cron: "47 23 * * *"  # 20:47 ARG
+    - cron: "11 00 * * *"  # 21:11 ARG
+    - cron: "41 00 * * *"  # 21:41 ARG
+    - cron: "13 01 * * *"  # 22:13 ARG
   workflow_dispatch:
 
 jobs:
