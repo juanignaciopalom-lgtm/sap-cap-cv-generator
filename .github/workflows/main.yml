@@ -6,7 +6,7 @@ on:
     - cron: "30 13 * * *"  # 10:30 ARG
     - cron: "30 19 * * *"  # 16:30 ARG
     - cron: "30 21 * * *"  # 18:30 ARG
-    - cron: "30 23 * * *"  # 20:30 ARG
+    - cron: "50 23 * * *"  # 20:30 ARG
   workflow_dispatch:
 
 jobs:
